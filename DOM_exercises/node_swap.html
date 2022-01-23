@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Node Swap</title>
+  </head>
+  <body>
+    <div id="1">
+      <div id="4"></div>
+      <div id="5">
+        <div id="6"></div>
+      </div>
+    </div>
+    <div id="2"></div>
+    <div id="3">
+      <div id="7"></div>
+      <div id="8"></div>
+      <div id="9"></div>
+    </div>
+
+    <script>
+        function sliceTree(start, end) {
+            let startElement = document.getElementById(String(start));
+            let endElement = document.getElementById(String(end));
+
+            if (startElement === null || endElement === null) return undefined; 
+
+            let slicedTree = [];
+
+            function backTrace(node) {
+                if (node === startElement || node === document.body) {
+                    slicedTree.unshift(node);
+                    return;
+                } else {
+                    slicedTree.unshift(node);
+                    backTrace(node.parentElement); //what happens if the parent is not an element?
+                }
+            }
+
+            backTrace(endElement);
+
+            if (!slicedTree.includes(startElement)) return undefined;
+
+            return slicedTree.map(node => node.tagName);
+        }
+
+        sliceTree(11, 19);
+    </script>
+  </body>
+</html>
+
+<!--
+    Write a function that takes two element id's as arguments and swaps the position of the elements represented by the id's.
+    The function returns true for valid swaps and undefined for invalid.
+
+    What is an invalid swap?
+    - at least one of the id attributes doesn't exist;
+    - at least one of the nodes is a child of the other.
+
+    Algorithm:
+    1. Verify if the swap is valid.
+    - get both nodes based on the input id;
+    - if one of the nodes is null return undefined;
+    2. Swap.
+-->
