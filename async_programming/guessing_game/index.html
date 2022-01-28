@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel='stylesheet' href = '/style.css'>
+</head>
+<body>
+    <main>
+        <h1>Number Guessing Game</h1>
+        <p>Loading...</p>
+        <form action="" method="get">
+          <fieldset>
+            <input type="text" id="guess" maxlength="3" />
+            <input type="submit" value="Guess" class="disabled"/>
+          </fieldset>
+        </form>
+        <a href="#">New game</a>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          let form = document.querySelector('form');
+          let input = document.querySelector('#guess');
+          let paragraph = document.querySelector('p');
+          let link = document.querySelector('a');  
+          let submitBtn = document.querySelector("[type='submit']")
+          let answer;
+          let guesses;
+
+          function newGame() {
+            answer = Math.floor(Math.random() * 100) + 1;
+            guesses = 0;
+            paragraph.textContent = 'Guess a number from 1 to 100';
+            submitBtn.disabled = false;
+          }
+          
+          form.addEventListener('submit', event => {
+            event.preventDefault();
+
+            let guess = parseInt(input.value, 10);
+            let message;
+
+            if (Number.isNaN(guess)) {
+              paragraph.textContent = 'The input is not a number.';
+              return;
+            }
+
+            guesses += 1;
+            
+            if (guess === answer) {
+              message = `You guessed it! It took you ${guesses} guesses.
+              `;
+              submitBtn.disabled = true;
+            } else if (guess > answer) {
+              message = `My number is lower than ${guess}`;
+            } else {
+              message = `My number is higher than ${guess}`;
+            }
+            
+            paragraph.textContent = message;
+          });
+
+          link.addEventListener('click', event => {
+            event.preventDefault();
+            newGame();
+          });
+          
+          newGame();
+        });
+    </script>
+</body>
+</html>
+
+
+
+  
