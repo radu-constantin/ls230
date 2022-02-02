@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <form id="selection-filters" method="post" action="#">
+        <select id="animal-classifications">
+          <option value="Classifications" selected>Classifications</option>
+          <option value="Vertebrate">Vertebrate</option>
+          <option value="Warm-blooded">Warm-blooded</option>
+          <option value="Cold-blooded">Cold-blooded</option>
+          <option value="Mammal">Mammal</option>
+          <option value="Bird">Bird</option>
+        </select>
+        <select id="animals">
+          <option value="Animals" selected>Animals</option>
+          <option value="Bear">Bear</option>
+          <option value="Turtle">Turtle</option>
+          <option value="Whale">Whale</option>
+          <option value="Salmon">Salmon</option>
+          <option value="Ostrich">Ostrich</option>
+        </select>
+        <button id="clear">Clear</button>
+        <script>
+            let classes = {
+                'Vertebrate': ['Bear', 'Turtle', 'Whale', 'Salmon', 'Ostrich'],
+                'Warm-blooded': ['Bear', 'Whale', 'Ostrich'],
+                'Cold-blooded': ['Salmon', 'Turtle'],
+                'Mammal': ['Bear', 'Whale'],
+                'Bird': ['Ostrich']
+            }
+
+            function clearOptions(options) {
+                Array.from(options).forEach(option => {
+                    option.removeAttribute('hidden');
+                    option.removeAttribute('disabled');
+                    option.removeAttribute('selected');
+                })
+                options[0].setAttribute('selected', true);
+            }
+
+            function disableOption(option) {
+                option.setAttribute('hidden', true);
+                option.setAttribute('disabled', true);
+                option.removeAttribute('selected');
+            }
+
+            let classDrop = document.getElementById('animal-classifications');
+            let animalDrop = document.getElementById('animals');
+            let clearBtn = document.getElementById('clear');
+
+            clearBtn.addEventListener('click', (event) => {
+                event.preventDefault();
+                clearOptions(animalDrop.options);
+                clearOptions(classDrop.options);
+            })
+
+            classDrop.addEventListener('input', (event) => {
+                let selectedClass = classDrop.options[classDrop.selectedIndex].value;
+                let classAnimals = classes[selectedClass];
+
+                if (selectedClass === 'Classifications') {
+                    clearOptions(animalDrop.options);
+                    return;
+                }
+
+                clearOptions(animalDrop.options);
+
+                Array.from(animalDrop.options).forEach(option => {
+                    if (option.value === classAnimals[0]) option.setAttribute('selected', true);
+                    if (!classAnimals.includes(option.value)) {
+                        disableOption(option);
+                    }
+                })
+            });
+
+            animalDrop.addEventListener('input', (event) => {
+                let selectedAnimal = animalDrop.options[animalDrop.selectedIndex].value;
+                let belongingClasses = [];
+
+                if (selectedAnimal === 'Animals') {
+                    clearOptions(classDrop.options);
+                    return;
+                }
+
+                clearOptions(classDrop.options);
+                for (let animalClass in classes) {
+                    if (classes[animalClass].includes(selectedAnimal)) belongingClasses.push(animalClass);
+                }
+
+                Array.from(classDrop.options).forEach(option => {
+                    if (option.value === belongingClasses[0]) option.setAttribute('selected', true);
+                    if (!belongingClasses.includes(option.value)) {
+                        disableOption(option);
+                    }
+                })
+            })
+        </script>
+</body>
+</html>
+
