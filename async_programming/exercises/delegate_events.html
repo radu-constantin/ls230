@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <title>Event Delegation Function</title>
+  </head>
+  <body>
+    <main>
+      <section>
+        <h1>Header</h1>
+        <p>Content</p>
+      </section>
+      <aside>
+        <h2>Sub Side Notes</h2>
+        <p>Note 1</p>
+        <p>Note 2</p>
+      </aside>
+    </main>
+    <nav>
+      <p>Side Note</p>
+    </nav>
+
+    <script>
+        /*
+        Implement a function that delegates events to the descendant (inner) elements of a parent element that match a given selector.
+
+        Rules: 
+        - the function takes 4 arguments: parentElement, selector, eventType and callback;
+        - will return true if it was able to add an event listener;
+        - will return undefined it not;
+
+        Failure scenarios:
+        1. Cannot find the parent element;
+        2. Cannot find the selector within the parentElement;
+        3. Cannot add the eventHandler;
+        */
+
+        const element1 = document.querySelector('table');
+        const element2 = document.querySelector('main h1');
+        const element3 = document.querySelector('main');
+
+        // Possible callback for use with the scenarios
+        const callback = ({target, currentTarget}) => {
+            alert(`Target: ${target.tagName}\nCurrent Target: ${currentTarget.tagName}`);
+        };
+
+        function delegateEvent(parentElement, selector, eventType, callback) {
+            parentElement.querySelector(selector)
+        }
+    </script>
+  </body>
+</html>
