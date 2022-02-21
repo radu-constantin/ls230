@@ -1,0 +1,41 @@
+<!--
+Write some JavaScript code that loads JSON data from https://api.github.com/repos/rails/rails, parses the JSON into a JavaScript object, and then logs the HTTP status code and the number of open issues to the console.
+
+1. Load the JSON data from the link;
+2. Parse JSON data into a JS object;
+3. Log: 
+    - HTTP status code of response;
+    - number of open issues.
+*/
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            let request = new XMLHttpRequest();
+            request.open('GET', 'hts://api.github.com/repos/rails/rails')
+
+            request.addEventListener('load', (event) => {
+                let data = JSON.parse(request.response);
+                console.log(request.status);
+                console.log(data);
+            })
+
+            request.addEventListener('error', () => {
+                console.log('The request could not be completed!');
+            })
+
+            request.send();
+        })
+    </script>
+</body>
+</html>
+
