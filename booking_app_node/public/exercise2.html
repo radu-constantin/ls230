@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>  
+        form {
+            border: 1px solid black;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        li {
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <form action="">
+        <ul>
+            <li>
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+            </li>
+           
+            <li>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" >
+            </li>
+            <li>
+                <button type="submit">Submit</button>
+            </li>
+        </ul>
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            let form = document.querySelector('form');
+            
+            form.addEventListener('submit', (event) => {
+                event.preventDefault();
+                let data = new FormData(form);
+
+                let request = new XMLHttpRequest();
+                request.open('POST', 'http://localhost:3000/api/staff_members');
+
+                request.addEventListener('load', (event) => {
+                    let statusGroup = Math.trunc(request.status / 100);
+                    if (statusGroup === 2) {
+                        alert('The staff member has been added!');
+                    }
+                    else if (statusGroup === 4) {
+                        alert('Input is not valid. Please try again!');
+                    }
+                })
+
+                request.send(data);
+            })
+        })
+    </script>
+</body>
+</html>
+
+<!--
+    Implement a form for adding new staff members to the database;
+    Implementation should handle the different possible responses of the server and inform the user of the outcome.
+
+    Rules:
+    To add a staff member:
+        - name and email fields are required;
+    Response of 201 signifies success;
+    Response 4xx signifies and error due to user input;
+
+    Steps:
+     1. Implement the necessary HTML & CSS;
+     2. Cancel the default submit of the form;
+     3. Make an Async call to the API in order to add the new staff member to the db.
+-->

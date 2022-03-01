@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercise 3</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        li {
+            list-style: none;
+            margin-bottom: 10px;
+        }
+        label {
+            display: inline-block;
+            width: 10vw;
+            text-align: right;
+        }
+
+        input {
+            width: 15vw;
+            height: 4vw;
+        }
+
+        select {
+            width: 15vw;
+            height: 4vw;
+        }
+
+        button {
+            padding: 10px 15px 10px 15px;
+            margin-left: 2px;
+            margin-top: 8px;
+            margin-bottom: 8px;
+            background-color: rgb(161, 129, 212);
+        }
+
+        form button {
+            padding: 10px 15px 10px 15px;
+            margin-left: 2px;
+            margin-top: 8px;
+            background-color: paleturquoise;
+        }
+
+        button:hover {
+            background-color: aliceblue;
+        }
+    </style>
+</head>
+<body>
+    <button type="button" id="scheduleBtn">Add more schedules</button>
+    <form>
+        <button type="submit" id="submitBtn">Submit</button>
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            function getStaffMembers() {
+                return new Promise(resolve => {
+                    let request = new XMLHttpRequest();
+                    request.open('GET', 'http://localhost:3000/api/staff_members');
+                    request.responseType = 'json';
+                    request.addEventListener('load', (event) => {
+                        resolve(event.currentTarget.response);
+                    })
+                    request.send();
+                })
+            };
+
+            let fillOptions = async function(element) {
+                let staff = await getStaffMembers();
+                staff.forEach((person) => {
+                    let option = `<option value=${person.id}>${person.name}</option>`;
+                    element += option;
+                })
+            };
+
+            let addFieldset = (function () {
+                let counter = 1;
+                return function (element) {
+                    let options = '';
+                    fillOptions(options);
+                    let html = `
+                    <fieldset>
+                        <legend>Schedule ${counter}</legend>
+                        <ul>
+                            <li>
+                                <label for="staff_name">Staff Name:</label>
+                                <select id='staff_name' name="staff_name">
+                                    ${options}
+                                </select>
+                            </li>
+                            <li>
+                                <label for="date">Date:</label>
+                                <input type="date" id="date" name="date">
+                            </li>
+                            <li>
+                                <label for="time">Time:</label>
+                                <input type="time" id="time" name="time">
+                            </li>
+                        </ul>
+                    </fieldset>
+                    `
+                    element.insertAdjacentHTML('beforebegin', html);
+                    counter += 1;
+                }
+            })();
+                
+            let addSchedulesBtn = document.getElementById('scheduleBtn');
+            let submitBtn = document.getElementById('submitBtn');
+            
+            addFieldset(submitBtn);
+
+            let staffDropdown = document.getElementById('staff_name');
+            fillOptions(staffDropdown);
+
+            addSchedulesBtn.addEventListener('click', (event) => {
+                addFieldset(submitBtn);
+            });
+        })
+        
+    </script>
+</body>
+</html>
+
+<!--
+    Implement the markup and JS needed to add one or more schedules. You should handle and inform the user of the different possible responses of the server.
+
+    Requirements:
+    1. User must be able to add a new schedule.
+    2. A schedule is composed of:
+        - a staff member;
+        - a data;
+        - a time;
+    3. User can add 1 or more schedules at a time;
+        - user has access to a button to add more fields to the form;
+    4. Schedules can only be added if all fields of input are valid. Else no schedule gets added.
+
+    2 Scripts are needed:
+        1. For adding an extra input field for more schedules;
+        2. For submitting the form via XHR.
+
+    Steps to completion:
+    1. Design the HTML and CSS template; DONE
+    2. Write the script for adding input fields for schedules;
+        - Each field must be numbered correctly;
+
+        Create a function that will append a fieldset element to the current form element in the page;
+        
+
+    3. Write the script for submitting the form and adding the schedules to the database;
+
+    How to load list of staff names while keeping a reference to their ID's?
+-->

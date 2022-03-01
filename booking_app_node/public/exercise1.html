@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    
+</head>
+<body>
+    <script>
+        function retrieveSchedules() {
+            let staff_schedules = {};
+            let message = '';
+
+            let request = new XMLHttpRequest();
+            request.open('GET', 'http://localhost:3000/api/schedules');
+            request.responseType = 'json';
+            request.timeout = 5000;
+
+            request.addEventListener('timeout', (event) => {
+                alert('The request took too long to load.')
+            })
+
+            request.addEventListener('loadend', (event) => {
+                alert('The request completed!');
+            })
+
+            request.addEventListener('load', (event) => {
+                let available_schedules = request.response;
+                // let available_schedules = request.response.filter(schedule => {
+                //     return schedule.student_email === null;
+                // })
+
+                if (available_schedules.length === 0) {
+                    alert('There are no available schedules!');
+                    return;
+                }
+
+                available_schedules.forEach(schedule => {
+                    let staff_id = schedule.staff_id;
+                    
+                    if (staff_schedules[staff_id]) {
+                        staff_schedules[staff_id] += 1;
+                    } else {
+                        staff_schedules[staff_id] = 1;
+                    }
+                });
+
+                alert(Object.entries(staff_schedules).map(pair => {
+                    return `staff ${pair[0]}: ${pair[1]}`;
+                }).join('\n'));
+            })
+
+            request.send();  
+        }
+
+        retrieveSchedules();
+    </script>
+</body>
+</html>
+
+<!--
+    Implement a function that retrieves all the schedules that are available.
+
+    Rules:
+    - If one or more schedules are available:
+        - count the schedules for each staff and alert the user in the format: staff {id}: number_of_schedules available;
+    - If there are no available schedules, alert the user;
+    - If more than 5 seconds have passed when issuing the request, cancel the retrieval and inform the user to try again.
+    - Inform the user about the completion of the request regardless of the success or failure (timeout) of the request.
+
+    Algorithm:
+
+    1. Get list of all schedules from API;
+    2. Check if schedule is available
+        - A schedule is available if the `student_email` property is empty;
+        - Filter the schedules received from the API and keep only the ones that have a `null` value for `student_email`;
+    3. If filtered list of schedules is empty, alert the user;
+    4. Example schedule format:
+    {
+        "date": "07-01-18",
+        "id": 1,
+        "staff_id": 1,
+        "student_email": my_email@something.com,
+        "time": "06:10"
+    },
+    5. Initialize a new empty object that will hold the staff_id: num_of_schedules key/value pairs;
+    6. Iterate through the available schedules and for each one:
+        - if staff_id already exists as a property in the obj. defined at step 5, add 1 to its value;
+        - if staff_id isn't present as a property in the obj. defined at step 5, define it with 1 as its value;
+    7. Alert the user of the number of schedules available for each staff member.
+-->
