@@ -70,27 +70,27 @@
                 })
             };
 
-            let fillOptions = async function(element) {
-                let staff = await getStaffMembers();
-                staff.forEach((person) => {
-                    let option = `<option value=${person.id}>${person.name}</option>`;
-                    element += option;
+            function getOptions(staffList) {
+                let options = '';
+                staffList.forEach(staff => {
+                    options += `<option value=${staff.id}>${staff.name}</option>`;
                 })
-            };
+                return options;
+            }
 
             let addFieldset = (function () {
                 let counter = 1;
-                return function (element) {
-                    let options = '';
-                    fillOptions(options);
+                return async function (element) {
+                    let options = getOptions(await getStaffMembers());
+        
                     let html = `
                     <fieldset>
                         <legend>Schedule ${counter}</legend>
                         <ul>
                             <li>
                                 <label for="staff_name">Staff Name:</label>
-                                <select id='staff_name' name="staff_name">
-                                    ${options}
+                                <select id='staff_name' name="staff_id">
+                                ${options}
                                 </select>
                             </li>
                             <li>
@@ -108,20 +108,42 @@
                     counter += 1;
                 }
             })();
-                
-            let addSchedulesBtn = document.getElementById('scheduleBtn');
+
+            let form = document.querySelector('form');
             let submitBtn = document.getElementById('submitBtn');
-            
-            addFieldset(submitBtn);
+            let scheduleBtn = document.getElementById('scheduleBtn');
+            addFieldset(submitBtn); //Adds initial fieldset;
 
-            let staffDropdown = document.getElementById('staff_name');
-            fillOptions(staffDropdown);
-
-            addSchedulesBtn.addEventListener('click', (event) => {
+            scheduleBtn.addEventListener('click', (event) => {
                 addFieldset(submitBtn);
-            });
+            })
+
+
+            form.addEventListener('submit', (event) => {
+                let request = new XMLHttpRequest();
+                request.open('POST', 'http://localhost:3000/api/schedules');
+                request.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+
+                let data = new FormData(form);
+                let jsonObj = {'schedules': []}
+                let json = {};
+                for (let pair of data.entries()) {
+                    json[pair[0]] = pair[1];
+                }
+
+                jsonObj['schedules'].push(json);
+
+                request.addEventListener('load', (event) => {
+                    alert(request.response);
+                })
+
+                jsonObj = JSON.stringify(jsonObj);
+                console.log(jsonObj);
+                request.send(jsonObj);
+            })
+
+
         })
-        
     </script>
 </body>
 </html>
@@ -154,4 +176,26 @@
     3. Write the script for submitting the form and adding the schedules to the database;
 
     How to load list of staff names while keeping a reference to their ID's?
+
+    
+
+            let fillOptions = async function(element) {
+                let staff = await getStaffMembers();
+                staff.forEach((person) => {
+                    let option = `<option value=${person.id}>${person.name}</option>`;
+                    element += option;
+                })
+            };
+
+            let addSchedulesBtn = document.getElementById('scheduleBtn');
+            let submitBtn = document.getElementById('submitBtn');
+            
+            addFieldset(submitBtn);
+
+            let staffDropdown = document.getElementById('staff_name');
+            fillOptions(staffDropdown);
+
+            addSchedulesBtn.addEventListener('click', (event) => {
+                addFieldset(submitBtn);
+            });
 -->
