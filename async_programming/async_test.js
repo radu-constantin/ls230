@@ -1,51 +1,14 @@
-// Example using .next;
+let myPromise = new Promise(resolve => {
+    setTimeout(() => {
+        resolve('Executed after 1 second.');
+    }, 1000);
+})
 
-// const collection = {
-//     a: 10,
-//     b: 20,
-//     c: 30,
-//     [Symbol.iterator]() {
-//         let i = 0;
-//         const values = Object.keys(this); //a, b, c;
-//         return {
-//             next: () => {
-//                 console.log(this);
-//                 return {
-//                     value: this[values[i++]],
-//                     done: i > values.length
-//                 }
-//             }
-//         }
-//     }
-// }
+async function waitFor() {
+    let result = await myPromise;
+    console.log(result);
+}
 
-// const iterator = collection[Symbol.iterator]();
+waitFor();
 
-// console.log(iterator.next());
-// -----------------------------------------------
-
-// const collection = {
-//     a: 10,
-//     b: 20,
-//     c: 30,
-//     [Symbol.iterator]() {
-//         let i = 0;
-//         let values = Object.keys(this);
-//         return {
-//             next: () => {
-//                 return {
-//                     value: this[values[i++]],
-//                     done: i > values.length
-//                 }
-//             }
-//         }
-//     }
-// };
-
-// for (const value of collection) {
-//     console.log(value);
-// }
-
-let array = [1, 2, 3, 4];
-
-console.log(array[Symbol.iterator]().next());
+console.log('End of script.')

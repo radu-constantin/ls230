@@ -58,3 +58,7 @@ li {
 li img {
   border: 3px solid #ffffff;
 }
+
+.selectedImg {
+  border: 3px solid blue;
+}

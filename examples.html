@@ -1,22 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=<device-width>, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    div {
+      background-color: #c0ffc0;
+      border: 1px solid green;
+      padding: 10px;
+      height: 400px;
+    }
+
+    p {
+      background-color: white;
+      border: 1px solid blue;
+      display: inline-block;
+      margin: 0 2%;
+      padding: 10px;
+      vertical-align: top;
+      width: 40%;
+    }
+  </style>
 </head>
 <body>
-    <script>
-        let request = new XMLHttpRequest();
-        request.open('GET', 'https://api.github.com/repos/rails/rails');
-
-        request.addEventListener('load', () => {
-            console.log(request.response);
-        })
-
-        request.send();
-    </script>
+  <div>
+    <p>
+      Occaecat sunt nulla esse. Est cupidatat fugiat sit mollit.  Sunt in velit
+      mollit deserunt veniam.
+    </p>
+    <p>
+      Aliquip dolor aliqua consequat ullamco exercitation anim.  Dolor voluptate
+      <!-- irure eiusmod cillum consectetur enim excepteur mollit mollit. Do proident
+      ipsum dolore. Et aliqua veniam ex laborum aliquip cupidatat excepteur. -->
+    </p>
+  </div>
 </body>
 </html>
-

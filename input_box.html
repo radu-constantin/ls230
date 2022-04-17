@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .text-field {
+            border: solid 1px #ccc;
+            padding: 1em;
+            cursor: pointer;
+            font-family: sans-serif;
+            font-size: 18px;
+            overflow: hidden;
+            width: 300px; 
+        }
+
+        .text-field .content {
+            display: inline-block;
+            height: 21px;
+            float: left;
+            white-space: pre;
+        }
+
+        .text-field.focused {
+            border-color: black;
+        }
+
+        .text-field.cursor .content {
+            border-right: solid 2px black;
+        }
+    </style>
+</head>
+<body>
+    <div class="text-field">
+        <div class="content"></div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            let textField = document.querySelector(".text-field");
+            let content = document.querySelector(".content");
+            let intervalID;
+            let intervalStatus = false;
+
+            textField.addEventListener('click', (event) => {
+                event.stopPropagation();
+                event.currentTarget.classList.add('focused');
+
+                if (!intervalStatus) {
+                    intervalID = setInterval(() => event.target.classList.toggle('cursor'), 500)
+                    intervalStatus = true;
+                }
+            })
+
+            document.addEventListener('keyup', (event) => {
+                if (textField.classList.contains('focused')) {
+                    if (event.key === 'Backspace') {
+                        let text = content.textContent;
+                        content.textContent = text.slice(0, text.length - 1);
+                    } else {
+                        content.textContent += event.key;
+                    }
+                }
+            })
+
+            document.addEventListener('click', (event) => {
+                clearInterval(intervalID);
+                intervalStatus = false;
+                textField.classList.remove('focused');
+                textField.classList.remove('cursor');
+            })
+        })
+    </script>
+</body>
+</html>
